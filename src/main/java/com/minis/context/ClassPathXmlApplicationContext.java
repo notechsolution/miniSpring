@@ -1,14 +1,13 @@
 package com.minis.context;
 
-import com.minis.beans.BeanFactory;
 import com.minis.beans.BeansException;
 import com.minis.core.ClassPathXmlResource;
-import com.minis.beans.SimpleBeanFactory;
-import com.minis.beans.XmlBeanDefinitionReader;
+import com.minis.beans.factory.SimpleBeanFactory;
+import com.minis.beans.factory.xml.XmlBeanDefinitionReader;
 
-public class ClassPathXmlApplicationContext {
+public class ClassPathXmlApplicationContext implements ApplicationEventPublisher{
 
-  private BeanFactory beanFactory;
+  private SimpleBeanFactory beanFactory;
   public ClassPathXmlApplicationContext(String fileName) {
     ClassPathXmlResource resource = new ClassPathXmlResource(fileName);
     beanFactory = new SimpleBeanFactory();
@@ -22,4 +21,8 @@ public class ClassPathXmlApplicationContext {
   }
 
 
+  @Override
+  public void publishEvent(ApplicationEvent event) {
+
+  }
 }
