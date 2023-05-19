@@ -1,6 +1,5 @@
-package com.minis.beans.factory;
+package com.minis.beans;
 
-import com.minis.beans.PropertyValue;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +22,8 @@ public class PropertyValues {
     propertyValueList.add(propertyValue);
   }
 
-  public void addPropertyValue(String name, String type, Object value) {
-    addPropertyValue(new PropertyValue(name, type, value));
+  public void addPropertyValue(String type, String name, Object value, boolean isRef) {
+    addPropertyValue(new PropertyValue(type, name, value, isRef));
   }
 
   public void removePropertyValue(PropertyValue propertyValue) {

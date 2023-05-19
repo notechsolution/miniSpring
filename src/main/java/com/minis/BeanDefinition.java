@@ -1,7 +1,7 @@
 package com.minis;
 
 import com.minis.beans.ArgumentValues;
-import com.minis.beans.factory.PropertyValues;
+import com.minis.beans.PropertyValues;
 
 public class BeanDefinition {
 
