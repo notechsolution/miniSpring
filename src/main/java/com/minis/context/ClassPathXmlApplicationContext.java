@@ -1,23 +1,24 @@
 package com.minis.context;
 
 import com.minis.beans.BeansException;
+import com.minis.beans.factory.ConfigurableListableBeanFactory;
 import com.minis.beans.factory.config.AutowiredAnnotationBeanPostProcessor;
+import com.minis.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import com.minis.beans.factory.support.AbstractBeanFactory;
-import com.minis.beans.factory.support.AutowireCapableBeanFactory;
+import com.minis.beans.factory.support.DefaultListableBeanFactory;
 import com.minis.core.ClassPathXmlResource;
-import com.minis.beans.factory.support.SimpleBeanFactory;
 import com.minis.beans.factory.xml.XmlBeanDefinitionReader;
 
-public class ClassPathXmlApplicationContext implements ApplicationEventPublisher{
+public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
-  private AbstractBeanFactory beanFactory;
+  private DefaultListableBeanFactory beanFactory;
 
   public ClassPathXmlApplicationContext(String fileName) {
     this(fileName, false);
   }
   public ClassPathXmlApplicationContext(String fileName, boolean isRefresh) {
     ClassPathXmlResource resource = new ClassPathXmlResource(fileName);
-    beanFactory = new AutowireCapableBeanFactory();
+    beanFactory = new DefaultListableBeanFactory();
     XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
     beanDefinitionReader.loadBeanDefinitions(resource);
     if(isRefresh){
@@ -30,22 +31,48 @@ public class ClassPathXmlApplicationContext implements ApplicationEventPublisher
     return beanFactory.getBean(beanId);
   }
 
-
-  public void refresh(){
-    registerBeanPostProcessors(this.beanFactory);
-    onRefresh();
+  @Override
+  public ConfigurableListableBeanFactory getBeanFactory() {
+    return beanFactory;
   }
 
-  private void onRefresh() {
-    this.beanFactory.refresh();
-  }
 
-  private void registerBeanPostProcessors(AbstractBeanFactory beanFactory) {
-    beanFactory.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
+  @Override
+  public void registerListeners() {
+  ApplicationListener listener = new ApplicationListener();
+  this.getApplicationEventPublisher().addApplicationListener(listener);
   }
 
   @Override
-  public void publishEvent(ApplicationEvent event) {
+  public void initApplicationEventPublisher() {
+    ApplicationEventPublisher publisher = new SimpleApplicationEventPublisher();
+    this.setApplicationEventPublisher(publisher);
 
+  }
+
+  @Override
+  public void postProcessBeanFactory(ConfigurableListableBeanFactory bf) {
+
+  }
+
+  @Override
+  public void registerBeanPostProcessors(ConfigurableListableBeanFactory bf) {
+    bf.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
+
+  }
+
+  public void onRefresh() {
+    this.beanFactory.refresh();
+  }
+
+  @Override
+  public void finishRefresh() {
+    publishEvent(new ContextRefreshEvent(this));
+  }
+
+
+  @Override
+  public void publishEvent(ApplicationEvent event) {
+    this.getApplicationEventPublisher().publishEvent(event);
   }
 }

@@ -14,9 +14,16 @@ public class BeanDefinition {
 
   private String className;
 
-  public BeanDefinition(String id, String className) {
+  private Class<?> beanClass;
+
+  public BeanDefinition(String id, String className){
     this.id = id;
     this.className = className;
+    try {
+      this.beanClass = Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -90,5 +97,13 @@ public class BeanDefinition {
 
   public boolean isPrototype() {
     return SCOPE_PROTOTYPE.equals(scope);
+  }
+
+  public Class<?> getBeanClass() {
+    return beanClass;
+  }
+
+  public void setBeanClass(Class<?> beanClass) {
+    this.beanClass = beanClass;
   }
 }

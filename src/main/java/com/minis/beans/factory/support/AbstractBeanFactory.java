@@ -2,8 +2,10 @@ package com.minis.beans.factory.support;
 
 import com.minis.beans.BeansException;
 import com.minis.beans.factory.BeanFactory;
+import com.minis.beans.factory.ConfigurableBeanFactory;
 import com.minis.beans.factory.config.AutowiredAnnotationBeanPostProcessor;
 import com.minis.beans.factory.config.BeanDefinition;
+import com.minis.beans.factory.config.BeanPostProcessor;
 import com.minis.beans.factory.config.ConstructorArgumentValue;
 import com.minis.beans.factory.config.ConstructorArgumentValues;
 import com.minis.beans.factory.config.PropertyValue;
@@ -15,10 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
+public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements ConfigurableBeanFactory, BeanDefinitionRegistry {
 
-  private Map<String, BeanDefinition> beanDefinitions = new ConcurrentHashMap<>();
-  private final List<AutowiredAnnotationBeanPostProcessor> beanPostProcessorList = new ArrayList<>();
+  protected Map<String, BeanDefinition> beanDefinitions = new ConcurrentHashMap<>();
+  private final List<BeanPostProcessor> beanPostProcessorList = new ArrayList<>();
 
   public AbstractBeanFactory() {
   }
@@ -227,12 +229,17 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
   }
 
 
-  public List<AutowiredAnnotationBeanPostProcessor> getBeanPostProcessorList() {
+  public List<BeanPostProcessor> getBeanPostProcessorList() {
     return beanPostProcessorList;
   }
 
-  public void addBeanPostProcessor(AutowiredAnnotationBeanPostProcessor beanPostProcessor) {
+  public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
     this.beanPostProcessorList.remove(beanPostProcessor);
     this.beanPostProcessorList.add(beanPostProcessor);
+  }
+
+  @Override
+  public int getBeanPostProcessorCount() {
+    return this.beanPostProcessorList.size();
   }
 }
