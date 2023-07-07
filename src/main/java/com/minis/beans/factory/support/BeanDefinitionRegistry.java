@@ -1,6 +1,6 @@
-package com.minis.beans;
+package com.minis.beans.factory.support;
 
-import com.minis.BeanDefinition;
+import com.minis.beans.factory.config.BeanDefinition;
 
 public interface BeanDefinitionRegistry {
 

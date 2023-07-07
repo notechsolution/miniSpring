@@ -1,7 +1,4 @@
-package com.minis;
-
-import com.minis.beans.ArgumentValues;
-import com.minis.beans.PropertyValues;
+package com.minis.beans.factory.config;
 
 public class BeanDefinition {
 
@@ -9,7 +6,7 @@ public class BeanDefinition {
   String SCOPE_PROTOTYPE = "prototype";
   private boolean lazyInit = false;
   private String[] dependsOn;
-  private ArgumentValues constructorArgumentValues;
+  private ConstructorArgumentValues constructorArgumentValues;
   private PropertyValues propertyValues;
   private String initMethodName;
   private String scope = SCOPE_SINGLETON;
@@ -55,11 +52,11 @@ public class BeanDefinition {
     this.dependsOn = dependsOn;
   }
 
-  public ArgumentValues getConstructorArgumentValues() {
+  public ConstructorArgumentValues getConstructorArgumentValues() {
     return constructorArgumentValues;
   }
 
-  public void setConstructorArgumentValues(ArgumentValues constructorArgumentValues) {
+  public void setConstructorArgumentValues(ConstructorArgumentValues constructorArgumentValues) {
     this.constructorArgumentValues = constructorArgumentValues;
   }
 

@@ -1,4 +1,4 @@
-package com.minis.beans.factory;
+package com.minis.beans.factory.support;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

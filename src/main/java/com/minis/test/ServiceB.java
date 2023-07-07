@@ -5,7 +5,7 @@ public class ServiceB {
   private ServiceC serviceC;
 
   public void sayHiToCaller() {
-    System.out.println("Hey, I Am sayHiToCaller from BaseService");
+    System.out.println("Hey, I Am sayHiToCaller from ServiceB");
   }
 
   public ServiceC getServiceC() {

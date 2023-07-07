@@ -1,10 +1,10 @@
 package com.minis.beans.factory.xml;
 
-import com.minis.BeanDefinition;
-import com.minis.beans.ArgumentValue;
-import com.minis.beans.ArgumentValues;
-import com.minis.beans.PropertyValues;
-import com.minis.beans.factory.SimpleBeanFactory;
+import com.minis.beans.factory.config.BeanDefinition;
+import com.minis.beans.factory.config.ConstructorArgumentValue;
+import com.minis.beans.factory.config.ConstructorArgumentValues;
+import com.minis.beans.factory.config.PropertyValues;
+import com.minis.beans.factory.support.AbstractBeanFactory;
 import com.minis.core.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +12,9 @@ import org.dom4j.Element;
 
 public class XmlBeanDefinitionReader {
 
-  SimpleBeanFactory beanFactory;
+  AbstractBeanFactory beanFactory;
 
-  public XmlBeanDefinitionReader(SimpleBeanFactory beanFactory) {
+  public XmlBeanDefinitionReader(AbstractBeanFactory beanFactory) {
     this.beanFactory = beanFactory;
   }
 
@@ -48,16 +48,16 @@ public class XmlBeanDefinitionReader {
       beanDefinition.setDependsOn(refs.toArray(new String[0]));
 
       List<Element> constructorElements = element.elements("constructor-arg");
-      ArgumentValues argumentValues = new ArgumentValues();
+      ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
       for (Element constructorElement : constructorElements) {
         String aType = constructorElement.attributeValue("type");
         String aName = constructorElement.attributeValue("name");
         String aValue = constructorElement.attributeValue("value");
-        argumentValues.addArgumentValue(new ArgumentValue(aType, aName, aValue));
+        constructorArgumentValues.addArgumentValue(new ConstructorArgumentValue(aType, aName, aValue));
       }
-      beanDefinition.setConstructorArgumentValues(argumentValues);
+      beanDefinition.setConstructorArgumentValues(constructorArgumentValues);
 
-      beanFactory.registerBeanDefinition(beanDefinition);
+      beanFactory.registerBeanDefinition(beanDefinition.getId(), beanDefinition);
     }
   }
 
