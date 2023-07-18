@@ -1,5 +1,7 @@
 package com.minis.web;
 
+import com.minis.beans.BeansException;
+import com.minis.beans.factory.config.Autowired;
 import com.minis.core.ClassPathXmlResource;
 import com.minis.core.Resource;
 import jakarta.servlet.ServletConfig;
@@ -9,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -33,9 +36,12 @@ public class DispatcherServlet extends HttpServlet {
   Map<String, Method> mappingMethods = new HashMap<>();
   List<String> urlMappingNames = new ArrayList<>();
 
+  private WebApplicationContext webApplicationContext;
+
   @Override
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
+    this.webApplicationContext = (WebApplicationContext) getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
     String contextConfigLocation = config.getInitParameter("contextConfigLocation");
     URL xmlPath = null;
     try {
@@ -79,12 +85,39 @@ public class DispatcherServlet extends HttpServlet {
         Class<?> clazz = Class.forName(controllerName);
         controllerClazz.put(controllerName, clazz);
         Object object = clazz.getConstructor().newInstance();
+        // combined IoC and MVC
+        populateBean(object, controllerName);
         controllerObjects.put(controllerName, object);
       } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        throw new RuntimeException(e);
+      } catch (BeansException e) {
         throw new RuntimeException(e);
       }
     }
 
+  }
+
+  private void populateBean(Object bean, String controllerName) throws BeansException {
+    Class<? extends Object> clazz = bean.getClass();
+    Field[] fields = clazz.getDeclaredFields();
+    if (fields != null) {
+      for (Field field : fields) {
+        boolean isAutowired = field.isAnnotationPresent(Autowired.class);
+        if(isAutowired){
+          System.out.println("field "+field.getName() +" isAutowired "+ isAutowired);
+          String fieldName = field.getName();
+          Object autowiredObject = this.webApplicationContext.getBean(fieldName);
+          try {
+            field.setAccessible(true);
+            field.set(bean, autowiredObject);
+            System.out.println("autowire "+ fieldName +" for bean "+ controllerName);
+          } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+
+    }
   }
 
   private List<String> scanPackages(List<String> packageNames) {

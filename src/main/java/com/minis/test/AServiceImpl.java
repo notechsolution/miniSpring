@@ -22,9 +22,11 @@ public class AServiceImpl implements AService {
   }
 
   @Override
-  public void sayHello() {
-    System.out.println("[AService]" + name + " with level " + level + ": " + property1 + ":" + property2);
+  public String sayHello() {
+    String hello = "[AService]" + name + " with level " + level + ": " + property1 + ":" + property2;
+    System.out.println(hello);
     serviceB.sayHiToCaller();
+    return hello;
   }
 
   public String getName() {

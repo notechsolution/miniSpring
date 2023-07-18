@@ -14,9 +14,10 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
   private DefaultListableBeanFactory beanFactory;
 
   public ClassPathXmlApplicationContext(String fileName) {
-    this(fileName, false);
+    this(fileName, true);
   }
   public ClassPathXmlApplicationContext(String fileName, boolean isRefresh) {
+    System.out.println("[IoC] ClassPathXmlApplicationContext try to start with configFile "+fileName);
     ClassPathXmlResource resource = new ClassPathXmlResource(fileName);
     beanFactory = new DefaultListableBeanFactory();
     XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
