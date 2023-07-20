@@ -56,7 +56,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
   }
 
   private void invokeInitMethod(BeanDefinition beanDefinition, Object singleton) {
-    if(beanDefinition.getInitMethodName()!=null && !beanDefinition.getInitMethodName().equals("")){
+    if (beanDefinition.getInitMethodName() != null && !beanDefinition.getInitMethodName().equals("")) {
       Class<? extends Object> clazz = singleton.getClass();
       try {
         Method method = clazz.getMethod(beanDefinition.getInitMethodName());
@@ -86,7 +86,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
       throws IllegalAccessException, ClassNotFoundException {
     System.out.println("handle properties for bean: " + beanDefinition.getId());
     PropertyValues propertyValues = beanDefinition.getPropertyValues();
-    if (propertyValues.isEmpty()) {
+    if (propertyValues == null || propertyValues.isEmpty()) {
       System.out.println("no property defined for bean: " + beanDefinition.getId());
       return;
     }
@@ -131,7 +131,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
   private static Object doCreateBean(BeanDefinition beanDefinition, Class<?> clz) throws InstantiationException, IllegalAccessException {
     Object beanInstance;
     ConstructorArgumentValues constructorArgumentValues = beanDefinition.getConstructorArgumentValues();
-    if (!constructorArgumentValues.isEmpty()) {
+    if (constructorArgumentValues != null && !constructorArgumentValues.isEmpty()) {
       Class<?>[] paramTypes = new Class<?>[constructorArgumentValues.getArgumentCount()];
       Object[] paramValues = new Object[constructorArgumentValues.getArgumentCount()];
       for (int i = 0; i < constructorArgumentValues.getArgumentCount(); i++) {
@@ -205,7 +205,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
   abstract public Object applyBeanPostProcessorBeforeInitialization(Object existingBean, String beanName) throws BeansException;
 
-  abstract public Object applyBeanPostProcessorAfterInitialization (Object existingBean, String beanName) throws BeansException;
+  abstract public Object applyBeanPostProcessorAfterInitialization(Object existingBean, String beanName) throws BeansException;
 
   @Override
   public void registerBeanDefinition(String name, BeanDefinition beanDefinition) {

@@ -11,6 +11,9 @@ import java.util.Map.Entry;
 
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory implements ConfigurableListableBeanFactory {
 
+
+  ConfigurableListableBeanFactory parentBeanFactory;
+
   @Override
   public int getBeanDefinitionCount() {
     return this.beanDefinitions.size();
@@ -25,7 +28,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
   public String[] getBeanNamesForType(Class<?> type) {
     List<String> beanNames = new ArrayList<>();
     for (Entry<String, BeanDefinition> entry : this.beanDefinitions.entrySet()) {
-      if(entry.getValue().getBeanClass().isAssignableFrom(type)) {
+      if (entry.getValue().getBeanClass().isAssignableFrom(type)) {
         beanNames.add(entry.getKey());
       }
     }
@@ -37,10 +40,30 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
   public <T> Map<String, T> getBeansOfType(Class<T> type) throws BeansException {
     Map<String, T> beans = new HashMap<>();
     for (Entry<String, BeanDefinition> entry : this.beanDefinitions.entrySet()) {
-      if(entry.getValue().getBeanClass().isAssignableFrom(type)) {
+      if (entry.getValue().getBeanClass().isAssignableFrom(type)) {
         beans.put(entry.getKey(), (T) getBean(entry.getKey()));
       }
     }
     return beans;
+  }
+
+
+  public void setParentBeanFactory(ConfigurableListableBeanFactory parentBeanFactory) {
+    this.parentBeanFactory = parentBeanFactory;
+  }
+
+  @Override
+  public Object getBean(String beanName) throws BeansException {
+    Object result = null;
+    try {
+      result = super.getBean(beanName);
+    } catch (BeansException e) {
+      System.out.println("Can't find bean from parentBeanFactory with error " + e.getMessage());
+    }
+
+    if (result == null && parentBeanFactory != null) {
+      result = parentBeanFactory.getBean(beanName);
+    }
+    return result;
   }
 }
