@@ -2,12 +2,24 @@ package com.minis.beans.factory.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class PropertyValues {
 
   private final List<PropertyValue> propertyValueList = new ArrayList<>();
 
   public PropertyValues() {
+  }
+
+  public PropertyValues(Map<String, Object> map) {
+    if (map != null) {
+      for (Entry<String, Object> entry : map.entrySet()) {
+        PropertyValue propertyValue = new PropertyValue(entry.getKey(), entry.getValue());
+        propertyValueList.add(propertyValue);
+      }
+
+    }
   }
 
   public List<PropertyValue> getPropertyValueList() {
@@ -44,7 +56,7 @@ public class PropertyValues {
   }
 
   public boolean contains(String propertyName) {
-    return getPropertyValue(propertyName)!=null;
+    return getPropertyValue(propertyName) != null;
   }
 
   public boolean isEmpty() {

@@ -17,8 +17,8 @@ public class HelloWorldBean {
   }
 
   @RequestMapping("/bingo")
-  public String bingo() {
-    return "Hello bingo!";
+  public String bingo(HelloDTO helloDTO) {
+    return "Hello bingo! name:"+" dto:"+ helloDTO.toString();
   }
 
 }
