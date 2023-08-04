@@ -13,4 +13,15 @@
     <bean id="serviceC" class="com.minis.test.ServiceC">
         <property type="com.minis.test.AServiceImpl" name="serviceA" ref="serviceA"/>
     </bean>
+    <bean id="jdbcTemplate" class="com.minis.jdbc.core.JdbcTemplate">
+        <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="helloWorldService" class="com.minis.test.web.HelloWorldService">
+    </bean>
+    <bean id="dataSource" class="com.minis.jdbc.datasource.SingleConnectionDataSource">
+        <property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property type="String" name="url" value="jdbc:mysql://10.222.145.187/nestjs_test"/>
+        <property type="String" name="username" value="miniOne"/>
+        <property type="String" name="password" value="catAdmin1!"/>
+    </bean>
 </beans>

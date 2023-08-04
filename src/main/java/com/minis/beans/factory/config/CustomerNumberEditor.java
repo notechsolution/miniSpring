@@ -23,7 +23,7 @@ public class CustomerNumberEditor implements PropertyEditor {
 
   @Override
   public void setAsText(String text) {
-    if(allowEmpty && StringUtils.hasText(text)) {
+    if(allowEmpty && !StringUtils.hasText(text)) {
       setValue(null);
     } else if (this.numberFormat !=null ) {
       setValue(NumberUtils.parseNumber(text, numberClass, numberFormat));
