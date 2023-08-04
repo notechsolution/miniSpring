@@ -1,7 +1,7 @@
 package com.minis.web.servlet;
 
 import com.minis.beans.BeansException;
-import com.minis.web.RequestMapping;
+import com.minis.web.annotation.RequestMapping;
 import com.minis.web.WebApplicationContext;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -33,6 +33,7 @@ public class RequestMappingHandlerMapping implements HandlerMapping {
       Method[] methods = clazz.getDeclaredMethods();
       if(methods!=null) {
         for (Method method : methods) {
+
           if(method.isAnnotationPresent(RequestMapping.class)){
             String path = method.getAnnotation(RequestMapping.class).value();
             mappingRegistry.registerHandlerMethod(path, controller, method);

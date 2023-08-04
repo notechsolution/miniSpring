@@ -13,7 +13,7 @@ public class PropertyEditorRegistrySupport {
   private Map<Class<?>, PropertyEditor> defaultEditors;
   private Map<Class<?>, PropertyEditor> customEditors = new HashMap<>();
 
-  protected void registerDefaultEditors() {
+  public void registerDefaultEditors() {
     createDefaultEditors();
   }
 

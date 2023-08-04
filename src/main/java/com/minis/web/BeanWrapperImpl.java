@@ -1,34 +1,24 @@
 package com.minis.web;
 
-import com.minis.beans.PropertyEditorRegistrySupport;
 import com.minis.beans.factory.config.PropertyEditor;
 import com.minis.beans.factory.config.PropertyValue;
-import com.minis.beans.factory.config.PropertyValues;
 import com.minis.util.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class BeanWrapperImpl extends PropertyEditorRegistrySupport {
+public class BeanWrapperImpl extends AbstractPropertyAccessor {
 
   private Object wrapperObject;
   Class<?> targetClass;
-  PropertyValues requestParams;
+
   public BeanWrapperImpl(Object target) {
     this.wrapperObject = target;
     this.targetClass = target.getClass();
     registerDefaultEditors();
   }
 
-  public void setPropertyValues(PropertyValues propertyValues) {
-    this.requestParams = propertyValues;
-    for (PropertyValue propertyValue : requestParams.getPropertyValueList()) {
-      setPropertyValue(propertyValue);
-    }
-
-  }
-
-  private void setPropertyValue(PropertyValue propertyValue) {
+  protected void setPropertyValue(PropertyValue propertyValue) {
     BeanPropertyHandler propertyHandler = new BeanPropertyHandler(this.wrapperObject, propertyValue.getName());
     PropertyEditor fieldEditor = getDefaultEditor(propertyHandler.getPropertyClass());
     fieldEditor.setAsText((String) propertyValue.getValue());

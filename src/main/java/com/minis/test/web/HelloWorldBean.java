@@ -1,9 +1,10 @@
 package com.minis.test.web;
 
 import com.minis.beans.factory.config.Autowired;
-import com.minis.test.AService;
 import com.minis.test.AServiceImpl;
-import com.minis.web.RequestMapping;
+import com.minis.web.annotation.RequestMapping;
+import com.minis.web.annotation.RequestParam;
+import com.minis.web.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class HelloWorldBean {
@@ -17,8 +18,11 @@ public class HelloWorldBean {
   }
 
   @RequestMapping("/bingo")
-  public String bingo(HelloDTO helloDTO) {
-    return "Hello bingo! name:"+" dto:"+ helloDTO.toString();
+  @ResponseBody
+  public HelloDTO bingo(@RequestParam("name") String name, HelloDTO helloDTO) {
+    helloDTO.setName("SERVER:"+helloDTO.getName());
+    System.out.println("SERVER:"+helloDTO.getName());
+    return helloDTO;
   }
 
 }
