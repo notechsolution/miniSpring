@@ -2,10 +2,12 @@ package com.minis.test.web;
 
 import com.minis.beans.factory.config.Autowired;
 import com.minis.test.AServiceImpl;
+import com.minis.test.HelloWorldService;
 import com.minis.web.annotation.RequestMapping;
 import com.minis.web.annotation.RequestParam;
 import com.minis.web.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public class HelloWorldController {
 
@@ -41,5 +43,11 @@ public class HelloWorldController {
     }
     System.out.println("get user #" + userId + " with result " + user.toString());
     return user;
+  }
+
+  @RequestMapping("/user/all")
+  @ResponseBody
+  public List<User> getAllUser() {
+    return this.helloWorldService.getAllUsers();
   }
 }

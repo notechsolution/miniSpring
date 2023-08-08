@@ -100,10 +100,12 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         switch (propertyValue.getType()) {
           case "Integer": {
             paramType = Integer.class;
+            paramValue =  Integer.valueOf((String) propertyValue.getValue());
             break;
           }
           case "int": {
             paramType = int.class;
+            paramValue =  Integer.parseInt((String) propertyValue.getValue());
             break;
           }
           default:

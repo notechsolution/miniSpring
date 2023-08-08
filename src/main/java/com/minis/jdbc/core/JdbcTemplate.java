@@ -2,7 +2,9 @@ package com.minis.jdbc.core;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import javax.sql.DataSource;
 
 public class JdbcTemplate {
@@ -37,17 +39,35 @@ public class JdbcTemplate {
     try{
       connection = dataSource.getConnection();
       statement = connection.prepareStatement(sql);
-      if(arguments!=null && arguments.length>0){
-        for(int i=0;i<arguments.length; i++){
-          Object argument = arguments[i];
-          if(argument instanceof String) {
-            statement.setString(i+1, (String) argument);
-          } else if(argument instanceof Integer){
-            statement.setInt(i+1, (Integer) argument);
-          }
-        }
-      }
+      ArgumentPreparedStatementSetter statementSetter = new ArgumentPreparedStatementSetter(arguments);
+      statementSetter.setValues(statement);
       return statementCallback.doInPreparedStatement(statement);
+    }catch (Exception e){
+      e.printStackTrace();
+    }finally {
+      try {
+        statement.close();
+        connection.close();
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+
+    }
+    return null;
+  }
+
+  public <T> List<T> query(String sql, Object[] arguments,RowMapper<T> rowMapper){
+
+    Connection connection = null;
+    PreparedStatement statement = null;
+    try{
+      connection = dataSource.getConnection();
+      statement = connection.prepareStatement(sql);
+      ArgumentPreparedStatementSetter statementSetter = new ArgumentPreparedStatementSetter(arguments);
+      statementSetter.setValues(statement);
+      ResultSet result = statement.executeQuery();
+      RowMapperResultSetExtractor<T> resultSetExtractor = new RowMapperResultSetExtractor<>(rowMapper);
+      return resultSetExtractor.extractData(result);
     }catch (Exception e){
       e.printStackTrace();
     }finally {
