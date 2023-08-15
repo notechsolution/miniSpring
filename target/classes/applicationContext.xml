@@ -16,7 +16,10 @@
     <bean id="jdbcTemplate" class="com.minis.jdbc.core.JdbcTemplate">
         <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="helloWorldService" class="com.minis.test.HelloWorldService">
+    <bean id="realHelloWorldService" class="com.minis.test.HelloWorldService">
+    </bean>
+    <bean id="helloWorldService" class="com.minis.aop.ProxyFactoryBean">
+        <property type="java.lang.Object" name="target" ref="realHelloWorldService"/>
     </bean>
     <bean id="dataSource" class="com.minis.jdbc.pool.PooledDataSource">
         <property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>

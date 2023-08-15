@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class HelloWorldService {
+public class HelloWorldService implements IHelloWorldService {
 
   @Autowired
   JdbcTemplate jdbcTemplate;
@@ -16,6 +16,7 @@ public class HelloWorldService {
   public HelloWorldService() {
   }
 
+  @Override
   public User getUser(Integer userId) {
     String sql = "select * from user where id="+userId;
     return (User) jdbcTemplate.query(sql, (statement) -> {
@@ -32,6 +33,7 @@ public class HelloWorldService {
 
   }
 
+  @Override
   public User getUserByName(String name) {
     String sql = "select * from user where name=?";
     return (User) jdbcTemplate.query(sql, new Object[]{name},(statement) -> {
@@ -48,6 +50,7 @@ public class HelloWorldService {
 
   }
 
+  @Override
   public List<User> getAllUsers() {
     String sql = "select * from user";
     return (List<User>) jdbcTemplate.query(sql, null, new RowMapper<User>() {

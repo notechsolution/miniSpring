@@ -3,6 +3,7 @@ package com.minis.beans.factory.support;
 import com.minis.beans.BeansException;
 import com.minis.beans.factory.BeanFactory;
 import com.minis.beans.factory.ConfigurableBeanFactory;
+import com.minis.beans.factory.FactoryBean;
 import com.minis.beans.factory.config.AutowiredAnnotationBeanPostProcessor;
 import com.minis.beans.factory.config.BeanDefinition;
 import com.minis.beans.factory.config.BeanPostProcessor;
@@ -50,9 +51,31 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
           }
         }
       }
-
+    }
+    if(singleton instanceof FactoryBean) {
+      return this.getObjectForBeanInstance(singleton, beanName);
     }
     return singleton;
+  }
+
+  private Object getObjectForBeanInstance(Object singleton, String beanName) {
+    if(!(singleton instanceof FactoryBean)) {
+      return singleton;
+    }
+    FactoryBean<?> factoryBean = (FactoryBean<?>) singleton;
+    Object object = getObjectFromFactoryBean(factoryBean, beanName);
+    return object;
+  }
+
+  private Object getObjectFromFactoryBean(FactoryBean<?> factoryBean, String beanName) {
+    Object object = null;
+    try {
+      object = factoryBean.getObject();
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+    return object;
   }
 
   private void invokeInitMethod(BeanDefinition beanDefinition, Object singleton) {

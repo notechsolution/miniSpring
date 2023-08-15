@@ -2,7 +2,7 @@ package com.minis.test.web;
 
 import com.minis.beans.factory.config.Autowired;
 import com.minis.test.AServiceImpl;
-import com.minis.test.HelloWorldService;
+import com.minis.test.IHelloWorldService;
 import com.minis.web.annotation.RequestMapping;
 import com.minis.web.annotation.RequestParam;
 import com.minis.web.annotation.ResponseBody;
@@ -15,7 +15,7 @@ public class HelloWorldController {
   AServiceImpl serviceA;
 
   @Autowired
-  HelloWorldService helloWorldService;
+  IHelloWorldService helloWorldService;
 
   @RequestMapping("/helloworld")
   public String getHelloWorld(HttpServletRequest request) {
