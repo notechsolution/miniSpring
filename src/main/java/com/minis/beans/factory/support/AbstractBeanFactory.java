@@ -2,6 +2,7 @@ package com.minis.beans.factory.support;
 
 import com.minis.beans.BeansException;
 import com.minis.beans.factory.BeanFactory;
+import com.minis.beans.factory.BeanFactoryAware;
 import com.minis.beans.factory.ConfigurableBeanFactory;
 import com.minis.beans.factory.FactoryBean;
 import com.minis.beans.factory.config.AutowiredAnnotationBeanPostProcessor;
@@ -39,6 +40,9 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
           try {
             singleton = createBean(beanDefinition);
             registerSingleton(beanName, singleton);
+            if(singleton instanceof BeanFactoryAware) {
+              ((BeanFactoryAware) singleton).setBeanFactory(this);
+            }
             //step 1 postProcessBeforeInitialization
             applyBeanPostProcessorBeforeInitialization(singleton, beanName);
             //step 2 init method

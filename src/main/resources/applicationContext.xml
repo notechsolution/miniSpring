@@ -18,8 +18,14 @@
     </bean>
     <bean id="realHelloWorldService" class="com.minis.test.HelloWorldService">
     </bean>
+    <bean id="myInterceptor" class="com.minis.aop.TracingInterceptor">
+    </bean>
     <bean id="helloWorldService" class="com.minis.aop.ProxyFactoryBean">
         <property type="java.lang.Object" name="target" ref="realHelloWorldService"/>
+        <property type="String" name="interceptorName" value="myBeforeInterceptor"/>
+<!--        <property type="String" name="interceptorName" value="myInterceptor"/>-->
+    </bean>
+    <bean id="myBeforeInterceptor" class="com.minis.test.aop.MyBeforeAdvice">
     </bean>
     <bean id="dataSource" class="com.minis.jdbc.pool.PooledDataSource">
         <property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>

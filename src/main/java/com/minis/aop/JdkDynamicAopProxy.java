@@ -7,9 +7,11 @@ import java.lang.reflect.Proxy;
 public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
 
   Object target;
+  Advisor advisor;
 
-  public JdkDynamicAopProxy(Object target) {
+  public JdkDynamicAopProxy(Object target, Advisor advisor) {
     this.target = target;
+    this.advisor = advisor;
   }
 
   @Override
@@ -20,7 +22,8 @@ public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    System.out.println("[AOP] do something before target method " + method.getName());
-    return method.invoke(target, args);
+    MethodInterceptor interceptor = advisor.getMethodInterceptor();
+    MethodInvocation invocation = new ReflectiveMethodInvocation(proxy, target, method, args, target.getClass());
+    return interceptor.invoke(invocation);
   }
 }
