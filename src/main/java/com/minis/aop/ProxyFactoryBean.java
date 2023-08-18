@@ -47,7 +47,7 @@ public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
 
   private synchronized Object getSingletonInstance() {
     if (singletonInstance == null) {
-      return singletonInstance = getProxy(createAopProxy(target, advisor));
+      singletonInstance = getProxy(createAopProxy(target, advisor));
     }
     return singletonInstance;
   }

@@ -44,11 +44,12 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
               ((BeanFactoryAware) singleton).setBeanFactory(this);
             }
             //step 1 postProcessBeforeInitialization
-            applyBeanPostProcessorBeforeInitialization(singleton, beanName);
+            singleton = applyBeanPostProcessorBeforeInitialization(singleton, beanName);
             //step 2 init method
             invokeInitMethod(beanDefinition, singleton);
             //step 3 postProcessAfterInitialization
             applyBeanPostProcessorAfterInitialization(singleton, beanName);
+            this.registerBean(beanName, singleton);
           } catch (Exception e) {
             e.printStackTrace();
             throw new BeansException(e.getMessage());

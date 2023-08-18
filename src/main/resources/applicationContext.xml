@@ -16,18 +16,20 @@
     <bean id="jdbcTemplate" class="com.minis.jdbc.core.JdbcTemplate">
         <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
     </bean>
-    <bean id="realHelloWorldService" class="com.minis.test.HelloWorldService">
+    <bean id="helloWorldService" class="com.minis.test.HelloWorldService">
     </bean>
-    <bean id="helloWorldService" class="com.minis.aop.ProxyFactoryBean">
-        <property type="java.lang.Object" name="target" ref="realHelloWorldService"/>
-        <property type="String" name="interceptorName" value="advisor"/>
-    </bean>
+
     <bean id="myBeforeInterceptor" class="com.minis.test.aop.MyBeforeAdvice">
     </bean>
     <bean id="advisor" class="com.minis.aop.NameMatchMethodPointcutAdvisor">
         <property type="com.minis.aop.Advice" name="advice" ref="myBeforeInterceptor"/>
         <property type="String" name="mappedName" value="*User"/>
     </bean>
+    <bean id="autoProxyCreator" class="com.minis.aop.autoproxy.BeanNameAutoProxyCreator">
+        <property type="String" name="pattern" value="*Service"/>
+        <property type="String" name="interceptorName" value="advisor"/>
+    </bean>
+
     <bean id="dataSource" class="com.minis.jdbc.pool.PooledDataSource">
         <property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property type="String" name="url" value="jdbc:mysql://10.222.145.187/nestjs_test"/>
